@@ -27,44 +27,45 @@ app.get('/api/hello', (req, res) => {
     res.end()
   })
 });
-app.post('/api/login',(req,res)=>{
+app.post('/api/login', (req, res) => {
   console.log(req.body)
-User.findAll().then(users=>{
-users.map(e=>{
-  if(e.number == req.body.username && e.token == req.body.password)
-{
-    res.json({user:e})
-}
-})
+  User.findAll().then(users => {
+    users.map(e => {
+      if (e.number == req.body.username && e.token == req.body.password) {
+        res.status(200).send("successfully logged In")
+      }
+    })
   })
+
 })
 app.post('/api/world', (req, res) => {
   //---------------------Image Uploaded-----------------------//
+
   const storage = multer.diskStorage({
     destination: "./uploads/",
-    filename: function(req, file, cb){
-      cb(null,"IMAGE-" + Date.now() + path.extname(file.originalname));
+    filename: function (req, file, cb) {
+      cb(null, "IMAGE-" + Date.now() + path.extname(file.originalname));
     }
- });
- const upload = multer({
-  storage: storage,
-  limits:{fileSize: 1000000},
-}).single("file");
-
-upload(req, res, (err) => {
-  console.log("Request ---", req.body);
-  console.log("Request file ---", req.file);//Here you get file.
-   let data = {
-    number: req.body.username,
-    token: req.body.password,
-    image_uploaded: req.file.path
-  }
-    User.create(data).then(jane => {
-    console.log("auto-generated ID:" + jane.id);
   });
-  if(!err)
-     return res.sendStatus(200).end();
-});
+  const upload = multer({
+    storage: storage,
+    limits: { fileSize: 1000000 },
+  }).single("file");
+
+  upload(req, res, (err) => {
+    console.log("Request ---", req.body);
+    console.log("Request file ---", req.file);//Here you get file.
+    let data = {
+      number: req.body.username,
+      token: req.body.password,
+      image_uploaded: req.file.path
+    }
+    User.create(data).then(jane => {
+      console.log("auto-generated ID:" + jane.id);
+    });
+    if (!err)
+      return res.sendStatus(200).end();
+  });
 
 });
 
