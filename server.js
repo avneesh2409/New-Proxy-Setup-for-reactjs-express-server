@@ -27,7 +27,17 @@ app.get('/api/hello', (req, res) => {
     res.end()
   })
 });
-
+app.post('/api/login',(req,res)=>{
+  console.log(req.body)
+User.findAll().then(users=>{
+users.map(e=>{
+  if(e.number == req.body.username && e.token == req.body.password)
+{
+    res.json({user:e})
+}
+})
+  })
+})
 app.post('/api/world', (req, res) => {
   //---------------------Image Uploaded-----------------------//
   const storage = multer.diskStorage({
