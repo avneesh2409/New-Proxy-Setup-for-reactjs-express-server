@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 
 import logo from './logo.svg';
 
@@ -11,7 +11,8 @@ class App extends Component {
     responseToPost: '',
     username: '',
     password: '',
-    file: ''
+    file: '',
+    check:false
   };
 
   componentDidMount() {
@@ -37,16 +38,30 @@ class App extends Component {
       },
       body: JSON.stringify({
         post: this.state.post,
-        username:this.state.username,
-        password:this.state.password,
-        file:this.state.file
+        username: this.state.username,
+        password: this.state.password,
+        file: this.state.file
       }),
     });
     const body = await response.text();
 
     this.setState({ responseToPost: body });
   };
-
+clickHandler=()=>{
+  if(this.state.check)
+  {
+    this.setState({
+      check:false
+    })
+  
+  }
+  else{
+    this.setState({
+      check:true
+    })
+  
+  }
+}
   render() {
     return (
       <div className="App">
@@ -63,40 +78,57 @@ class App extends Component {
           >
             Learn React
           </a>
+          <button onClick={this.clickHandler}>Login</button>
+          <button onClick={this.clickHandler}>Register</button>
         </header>
-        <p>{this.state.response}</p>
-        <form onSubmit={this.handleSubmit}>
-          <p>
-            <strong>Post to Server:</strong>
-          </p>
-          <input
-            placeholder="enter a text"
-            type="text"
-            value={this.state.post}
-            onChange={e => this.setState({ post: e.target.value })}
-          />
-          <hr />
-          <input
-            placeholder="enter a username"
-            type="text"
-            value={this.state.username}
-            onChange={e => this.setState({ username: e.target.value })}
-          />
-          <hr />
-          <input
-            placeholder="enter the password"
-            type="password"
-            value={this.state.password}
-            onChange={e => this.setState({ password: e.target.value })}
-          /><hr />
-          <input
-            type="file"
-            value={this.state.file}
-            onChange={e => this.setState({ file: e.target.value })}
-          /><hr />
-          <button type="submit">Submit</button>
-        </form>
-        <p>{this.state.responseToPost}</p>
+        {
+          (this.state.check) ?
+            <Fragment>
+              <h1>Register Here</h1>
+              <p>{this.state.response}</p>
+              <form onSubmit={this.handleSubmit}>
+                <p>
+                  <strong>Post to Server:</strong>
+                </p>
+                <input
+                  placeholder="enter a text"
+                  type="text"
+                  value={this.state.post}
+                  onChange={e => this.setState({ post: e.target.value })}
+                />
+                <hr />
+                <input
+                  placeholder="enter a username"
+                  type="text"
+                  value={this.state.username}
+                  onChange={e => this.setState({ username: e.target.value })}
+                />
+                <hr />
+                <input
+                  placeholder="enter the password"
+                  type="password"
+                  value={this.state.password}
+                  onChange={e => this.setState({ password: e.target.value })}
+                /><hr />
+                <input
+                  type="file"
+                  value={this.state.file}
+                  onChange={e => this.setState({ file: e.target.value })}
+                /><hr />
+                <button type="submit">Submit</button>
+              </form>
+              <p>{this.state.responseToPost}</p>
+            </Fragment>
+            :
+            <Fragment>
+              <h1>Login Here</h1>
+              <form>
+                <p><input type="text" name="username" /></p>
+                <p><input type="password" name="password" /></p>
+                <p><button type="submit" >Log In</button></p>
+              </form>
+            </Fragment>
+        }
       </div>
     );
   }

@@ -5,7 +5,7 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 //-----------------------------------------------------------//
-// var formidable = require('formidable')
+var formidable = require('formidable')
 var fs = require('fs');
 const User = require('./models/model')
 //-----------------------------------------------------------//
@@ -26,8 +26,8 @@ app.post('/api/world', (req, res) => {
   //   console.log(fields)
   //   console.log(files.filetoupload.name)
   // })
-  var oldpath = "C:\\Users\\avndv\\Downloads\\me.jpg";
-  var newpath = 'C:\\Users\\avndv\\Desktop\\NodeJs\\New-Proxy-Setup-for-reactjs-express-server\\uploads\\' + Math.floor(Math.random() * 1000) + "_" + "mine.jpg";
+  // var oldpath = req.body.file;
+  // var newpath = 'uploads/' + Math.floor(Math.random() * 1000) + "_" + req.body.file;
   // let data = {
   //   number: fields.number,
   //   token: fields.token,
@@ -36,11 +36,13 @@ app.post('/api/world', (req, res) => {
   // User.create(data).then(jane => {
   //   console.log("auto-generated ID:" + jane.id);
   // });
-  console.log("old path :- "+oldpath)
-  console.log("new path :- "+newpath)
-  console.log(req.body.file.name)
-  fs.rename(oldpath, newpath, function (err) {
-    if (err) throw err;
-  });
+  // fs.rename(oldpath, newpath, function (err) {
+  //   if (err) throw err;
+  // });
   //-----------------------------------------------------------------//
   res.send(
+    `I received your POST request. This is what you sent me: ${req.body.post}--->${req.body.username}--->${req.body.password}--->${req.body.file}`,
+  );
+});
+
+app.listen(port, () => console.log(`Listening on port ${port}`));
