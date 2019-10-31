@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-
+import axios from 'axios'
 import logo from './logo.svg';
 
 import './App.css';
@@ -31,10 +31,10 @@ class App extends Component {
 
   handleSubmit = async e => {
     e.preventDefault();
-    const response = await fetch('/api/world', {
+    const response = await axios('/api/world', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'multipart/form-data',
       },
       body: JSON.stringify({
         post: this.state.post,
@@ -43,9 +43,8 @@ class App extends Component {
         file: this.state.file
       }),
     });
-    const body = await response.text();
-
-    this.setState({ responseToPost: body });
+    const body = await response;
+console.log(body)
   };
 clickHandler=()=>{
   if(this.state.check)
@@ -113,11 +112,11 @@ clickHandler=()=>{
                 <input
                   type="file"
                   value={this.state.file}
-                  onChange={e => this.setState({ file: e.target.value })}
+                  onChange={e => this.setState({file:e.target.value})}
                 /><hr />
                 <button type="submit">Submit</button>
               </form>
-              <p>{this.state.responseToPost}</p>
+            
             </Fragment>
             :
             <Fragment>

@@ -1,12 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const path = require("path");
+const multer = require("multer");
 
 const app = express();
 const port = process.env.PORT || 5000;
 
 //-----------------------------------------------------------//
-var formidable = require('formidable')
-var fs = require('fs');
+// var formidable = require('formidable')
+// var fs = require('fs');
 const User = require('./models/model')
 //-----------------------------------------------------------//
 
@@ -14,35 +16,46 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/api/hello', (req, res) => {
-  res.send({ express: 'Hello From Express' });
+  User.findAll().then(users => {
+    console.log("All users:")
+    res.write("<table border='1' style='border-collapse:collapse'><tr><th>id</th><th>number</th><th>token</th><th>image</th><th>createdAt</th><th>updatedAt</th></tr>")
+    users.map(e => {
+      console.log(e.dataValues)
+      res.write("<tr><td>" + e.dataValues['id'] + "</td><td>" + e.dataValues['number'] + "</td><td>" + e.dataValues['token'] + "</td><td>" + e.dataValues['image_uploaded'] + "</td><td>" + e.dataValues['createdAt'] + "</td><td>" + e.dataValues['updatedAt'] + "</td></tr>")
+    })
+    res.write("</table>")
+    res.end()
+  })
 });
 
 app.post('/api/world', (req, res) => {
-  console.log(req.body);
-  //-----------------------------------------------------------------//
-  // var form = new formidable.IncomingForm();
-  // form.parse(req, function (err, fields, files) {
-  //   if (err) { throw (err) }
-  //   console.log(fields)
-  //   console.log(files.filetoupload.name)
-  // })
-  // var oldpath = req.body.file;
-  // var newpath = 'uploads/' + Math.floor(Math.random() * 1000) + "_" + req.body.file;
-  // let data = {
-  //   number: fields.number,
-  //   token: fields.token,
-  //   image_uploaded: newpath
-  // }
-  // User.create(data).then(jane => {
-  //   console.log("auto-generated ID:" + jane.id);
-  // });
-  // fs.rename(oldpath, newpath, function (err) {
-  //   if (err) throw err;
-  // });
-  //-----------------------------------------------------------------//
-  res.send(
-    `I received your POST request. This is what you sent me: ${req.body.post}--->${req.body.username}--->${req.body.password}--->${req.body.file}`,
-  );
+  //---------------------Image Uploaded-----------------------//
+  const storage = multer.diskStorage({
+    destination: "./uploads/",
+    filename: function(req, file, cb){
+      cb(null,"IMAGE-" + Date.now() + path.extname(file.originalname));
+    }
+ });
+ const upload = multer({
+  storage: storage,
+  limits:{fileSize: 1000000},
+}).single("file");
+
+upload(req, res, (err) => {
+  console.log("Request ---", req.body);
+  console.log("Request file ---", req.file);//Here you get file.
+   let data = {
+    number: req.body.username,
+    token: req.body.password,
+    image_uploaded: req.file.path
+  }
+    User.create(data).then(jane => {
+    console.log("auto-generated ID:" + jane.id);
+  });
+  if(!err)
+     return res.sendStatus(200).end();
+});
+
 });
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
