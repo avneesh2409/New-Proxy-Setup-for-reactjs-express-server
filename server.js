@@ -37,6 +37,18 @@ app.post('/api/login', (req, res) => {
   })
 
 })
+app.post('/api/create',(req,res)=>{
+console.log("we are here")
+User.init({},{sequelize,})
+User.sync({ force: true }).then(() => {
+  return User.create({
+    number: 'John',
+    token: 'Hancock',
+    image_uploaded:'sfdkhsdvncsdbdv'
+  });
+
+res.status(200).send("successfully responded")
+})
 app.post('/api/world', (req, res) => {
   //---------------------Image Uploaded-----------------------//
 

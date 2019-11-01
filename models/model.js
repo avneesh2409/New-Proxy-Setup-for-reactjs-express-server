@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize('MyApplication', 'postgres', '9200163022@', {
+const sequelize = new Sequelize('Avneesh', 'Avneesh', '9200163022@', {
     host: 'localhost',
-    dialect: 'postgres'
+    dialect: 'mysql'
   });
 const User = sequelize.define('projects', {
 
