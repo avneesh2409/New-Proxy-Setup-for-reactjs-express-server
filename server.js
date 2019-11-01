@@ -10,7 +10,7 @@ const port = process.env.PORT || 5000;
 // var fs = require('fs');
 const User = require('./models/model')
 //-----------------------------------------------------------//
-
+app.use( express.static( "uploads" ) );
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
@@ -31,31 +31,19 @@ app.post('/api/login', (req, res) => {
   User.findAll().then(users => {
     users.map(e => {
       if (e.number == req.body.username && e.token == req.body.password) {
-         res.render('index',{user:e})
+         res.render('head',{user:e})
       }
     })
   })
-
 })
-app.post('/api/create',(req,res)=>{
-console.log("we are here")
-User.init({},{sequelize,})
-User.sync({ force: true }).then(() => {
-  return User.create({
-    number: 'John',
-    token: 'Hancock',
-    image_uploaded:'sfdkhsdvncsdbdv'
-  });
 
-res.status(200).send("successfully responded")
-})
-app.post('/api/world', (req, res) => {
+app.post('/api/register', (req, res) => {
   //---------------------Image Uploaded-----------------------//
 
   const storage = multer.diskStorage({
     destination: "./uploads/",
     filename: function (req, file, cb) {
-      cb(null, "IMAGE-" + Date.now() + path.extname(file.originalname));
+      cb(null,file.originalname);
     }
   });
   const upload = multer({
@@ -69,13 +57,13 @@ app.post('/api/world', (req, res) => {
     let data = {
       number: req.body.username,
       token: req.body.password,
-      image_uploaded: req.file.path
+      image_uploaded: req.file.originalname
     }
     User.create(data).then(jane => {
       console.log("auto-generated ID:" + jane.id);
+      res.send("successfully registered "+ jane.number +"<a href='/api/login'>Login here</a>")
     });
-    if (!err)
-      return res.sendStatus(200).end();
+ 
   });
 
 });

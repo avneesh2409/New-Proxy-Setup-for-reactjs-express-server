@@ -19,7 +19,7 @@ const User = sequelize.define('projects', {
       allowNull:false
     }
   }, {
-    // options
+  
   });
   sequelize
   .authenticate()

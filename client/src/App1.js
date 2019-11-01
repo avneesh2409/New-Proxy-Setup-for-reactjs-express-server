@@ -45,7 +45,7 @@ class App1 extends Component {
                         <Fragment>
                             <h1>Register Here</h1>
                             <hr />
-                            <form action="api/world/" method="post" enctype="multipart/form-data">
+                            <form action="/api/register" method="post" enctype="multipart/form-data">
 
                                 <input
                                     placeholder="enter a username"
@@ -70,7 +70,7 @@ class App1 extends Component {
                         <Fragment>
                             <h1>Login Here</h1>
                             <hr />
-                            <form action="api/login/" method="post">
+                            <form action="/api/login" method="post">
 
                                 <input
                                     placeholder="enter a username"
