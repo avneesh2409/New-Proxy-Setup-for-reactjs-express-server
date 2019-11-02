@@ -17,15 +17,19 @@ app.set('view engine', 'ejs');
 app.get('/api/hello', (req, res) => {
   User.findAll().then(users => {
     console.log("All users:")
-    res.write("<table border='1' style='border-collapse:collapse'><tr><th>id</th><th>number</th><th>token</th><th>image</th><th>createdAt</th><th>updatedAt</th></tr>")
-    users.map(e => {
-      console.log(e.dataValues)
-      res.write("<tr><td>" + e.dataValues['id'] + "</td><td>" + e.dataValues['number'] + "</td><td>" + e.dataValues['token'] + "</td><td>" + e.dataValues['image_uploaded'] + "</td><td>" + e.dataValues['createdAt'] + "</td><td>" + e.dataValues['updatedAt'] + "</td></tr>")
-    })
-    res.write("</table>")
-    res.end()
+    res.render('show_details',{users})
   })
 });
+app.delete('/api/delete/:id',(req,res)=>{
+ 
+    User.destroy({
+      where: {
+        ID : req.params.id
+
+      }
+  })
+  res.send("successfully deleted")
+})
 app.post('/api/login', (req, res) => {
   console.log(req.body)
   User.findAll().then(users => {
